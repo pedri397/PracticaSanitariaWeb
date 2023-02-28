@@ -13,22 +13,80 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <!-- CSSs propios -->
     <link rel="stylesheet" href="./css/style.css">
-    <title>Sanitaria | Home</title>
+    <title>Sanitaria | Técnico Actualizar Datos</title>
 </head>
 
-<body>
-    <h1>Sanitaria index</h1>
+<body class="bg-info-subtle">
 
+    <div class="container-fluid p-0 m-0">
+        <div
+            class="row col-10 col-md-8 col-lg-6 mx-auto border border-3 rounded position-absolute top-50 start-50 translate-middle p-md-3 p-5 bg-dark bg-gradient text-light">
+            <h1 class="row fs-3 mb-4 justify-content-center mx-auto my-0">
+                Editar Datos Técnico
+            </h1>
+            <!-- Form de actualizar datos -->
+            <form class="form text-dark" method="#" action="#">
+                <div class="row justify-content-between">
+                    <div class="col-12 col-md-5 form-floating px-1 mb-3">
+                        <input type="text" class="form-control bg-light opacity-75" id="inputName"
+                            placeholder="Nombre Técnico" name="nombreTecnicoUpdate" required value="Nombre Técnico">
+                        <label class="ps-4" for="inputName">Nombre</label>
+                    </div>
+                    <div class="col-12 col-md-7 form-floating px-1 mb-3">
+                        <input type="text" class="form-control bg-light opacity-75" id="inputApellidos"
+                            placeholder="Apellido1 Apellido2" name="apellidosTecnicoUpdate" required
+                            value="Apellido1 Apellido2">
+                        <label class="ps-4" for="inputApellidos">Apellidos</label>
+                    </div>
+                </div>
 
+                <div class="row justify-content-between mb-3">
+                    <div class="form-floating px-1 mb-3">
+                        <input type="email" class="form-control bg-light opacity-75" id="exampleInputUser2"
+                            placeholder="emailtecnico@gmail.com" name="emailTecnicoUpdate" required
+                            value="emailtecnico@gmail.com">
+                        <label class="ps-4" for="exampleInputUser2">
+                            Email</label>
+                    </div>
+                </div>
+                <div class="row justify-content-between mb-3">
+                    <div class="col-12 col-md-6 form-floating mb-3">
 
+                        <select class="form-select bg-light opacity-75" aria-label="Default select example"
+                            name="centroTecnicoUpdate" required>
+                            <option selected disabled>Seleccione su Centro</option>
+                            <option value="IES Ribera del Tajo" selected>IES Ribera del Tajo</option>
+                            <option value="IES Padre Juan de Mariana">IES Padre Juan de Mariana</option>
+                            <option value="IES San Isidro">IES San Isidro</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-6 form-floating mb-3">
 
+                        <select class="form-select bg-light opacity-75" aria-label="Default select example"
+                            name="cursoTecnicoUpdate" required>
+                            <option selected disabled>Seleccione su Curso</option>
+                            <option value="1º DAW">1º DAW</option>
+                            <option value="1º DAM">1º DAM</option>
+                            <option value="2º DAW" selected>2º DAW</option>
+                            <option value="2º DAM">2º DAM</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="border-0 mx-auto d-flex justify-content-center p-1 m-3">
+                    <button type="submit"
+                        class="btn btn-outline-info m-auto mt-2 mx-auto fs-5 py-2 border btn__bg--first ">Actualizar
+                        Datos</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- JS propios -->
+    <script src="./js/script.js"></script>
     <!-- JS de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
-
-
-    <script src="./js/script.js"></script>
 
 </body>
 
