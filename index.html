@@ -28,54 +28,52 @@
             <form class="form text-dark" method="#" action="#">
                 <div class="row justify-content-between">
                     <div class="col-12 col-md-5 form-floating px-1 mb-3">
-                        <input type="text" class="form-control bg-light opacity-75" id="inputName"
+                        <input type="text" class="form-control bg-light opacity-75" id="inputUpdateName"
                             placeholder="Nombre Técnico" name="nombreTecnicoUpdate" required value="Nombre Técnico">
-                        <label class="ps-4" for="inputName">Nombre</label>
+                        <label class="fw-bold" for="inputUpdateName">Nombre</label>
                     </div>
                     <div class="col-12 col-md-7 form-floating px-1 mb-3">
-                        <input type="text" class="form-control bg-light opacity-75" id="inputApellidos"
+                        <input type="text" class="form-control bg-light opacity-75" id="inputUpdateApellidos"
                             placeholder="Apellido1 Apellido2" name="apellidosTecnicoUpdate" required
                             value="Apellido1 Apellido2">
-                        <label class="ps-4" for="inputApellidos">Apellidos</label>
+                        <label class="fw-bold" for="inputUpdateApellidos">Apellidos</label>
                     </div>
                 </div>
 
                 <div class="row justify-content-between mb-3">
                     <div class="form-floating px-1 mb-3">
-                        <input type="email" class="form-control bg-light opacity-75" id="exampleInputUser2"
+                        <input type="email" class="form-control bg-light opacity-75" id="inputUpdateEmail"
                             placeholder="emailtecnico@gmail.com" name="emailTecnicoUpdate" required
                             value="emailtecnico@gmail.com">
-                        <label class="ps-4" for="exampleInputUser2">
+                        <label class="fw-bold" for="inputUpdateEmail">
                             Email</label>
                     </div>
                 </div>
                 <div class="row justify-content-between mb-3">
                     <div class="col-12 col-md-6 form-floating mb-3">
-
                         <select class="form-select bg-light opacity-75" aria-label="Default select example"
-                            name="centroTecnicoUpdate" required>
-                            <option selected disabled>Seleccione su Centro</option>
+                            name="centroTecnicoUpdate" id="inputUpdateCentro" required>
                             <option value="IES Ribera del Tajo" selected>IES Ribera del Tajo</option>
                             <option value="IES Padre Juan de Mariana">IES Padre Juan de Mariana</option>
                             <option value="IES San Isidro">IES San Isidro</option>
                         </select>
+                        <label for="inputUpdateCentro" class="fw-bold">Centro</label>
                     </div>
                     <div class="col-12 col-md-6 form-floating mb-3">
-
                         <select class="form-select bg-light opacity-75" aria-label="Default select example"
-                            name="cursoTecnicoUpdate" required>
-                            <option selected disabled>Seleccione su Curso</option>
+                            name="cursoTecnicoUpdate" id="inputUpdateCurso" required>
                             <option value="1º DAW">1º DAW</option>
                             <option value="1º DAM">1º DAM</option>
                             <option value="2º DAW" selected>2º DAW</option>
                             <option value="2º DAM">2º DAM</option>
                         </select>
+                        <label for="inputUpdateCurso" class="fw-bold">Curso</label>
+
                     </div>
 
                 </div>
                 <div class="border-0 mx-auto d-flex justify-content-center p-1 m-3">
-                    <button type="submit"
-                        class="btn btn-outline-info m-auto mt-2 mx-auto fs-5 py-2 border btn__bg--first ">Actualizar
+                    <button type="submit" class="btn btn-outline-info m-auto mt-2 mx-auto fs-5 py-2 border">Actualizar
                         Datos</button>
                 </div>
             </form>
