@@ -8,9 +8,7 @@ const formUpdateTecData = document.querySelector("#formUpdateTecData")
 
 const container = document.querySelector("#container")
 
-const alertError = document.querySelector(".alert-danger")
-const alertUpdated = document.querySelector(".alert-primary")
-const alertWarning = document.querySelector(".alert-warning")
+const alert = document.querySelector("#alert")
 
 
 //Ejemplo si el login lo ha realizado el técnico con el id 1
@@ -60,7 +58,7 @@ const loadTecData = async () => {
         inputUpdateEmail.value = tecData.email
         changeOptionSelected(Array.from(inputUpdateCentro.children), tecData.centro)
         changeOptionSelected(Array.from(inputUpdateCurso.children), tecData.curso)
-    } else {//Si tiene token se le redirigiría al login
+    } else {//Si no se le redirigiría al login
 
     }
 }
@@ -68,39 +66,32 @@ const loadTecData = async () => {
 //Patch para actualizar los datos del técnico:
 const updateTecData = async (ev) => {
     ev.preventDefault()
-    alertError.classList.add("d-none")
-    alertWarning.classList.add("d-none")
-    alertUpdated.classList.add("d-none")
+    alert.classList.add("d-none")
+    alert.textContent = ""
 
-    let inputEmpty = false
-    const newTecData =
-    {
-        nombre: inputUpdateName.value.trim(),
-        apellidos: inputUpdateApellidos.value.trim(),
-        email: inputUpdateEmail.value.trim(),
-        centro: inputUpdateCentro.value.trim(),
-        curso: inputUpdateCurso.value.trim(),
-    }
-    for (let i in newTecData) {
-        if (newTecData[i] === "") {
-            inputEmpty = true
-        }
-    }
-    if (inputEmpty) {//Si hay algún campo vacio
-        alertWarning.classList.remove("d-none")
-    } else {
-        if (await apiRequest(
-            `http://localhost:3000/sanitaria/tecnicos/${tecId}`,
-            token,
-            "PUT",
-            JSON.stringify(newTecData)
-        ).error) {//Si se ha producido algún error
-            alertError.classList.remove("d-none")
-        } else {//Si se ha producido la actualización correctamente
-            alertUpdated.classList.remove("d-none")
-        }
-    }
+    if (await apiRequest(
+        `http://localhost:3000/sanitaria/tecnicos/${tecId}`,
+        token,
+        "PUT",
+        JSON.stringify(
+            {
+                nombre: inputUpdateName.value,
+                apellidos: inputUpdateApellidos.value,
+                email: inputUpdateEmail.value,
+                centro: inputUpdateCentro.value,
+                curso: inputUpdateCurso.value,
+            }
+        )
+    ).error) {//Si se ha producido algún error
+        alert.classList.remove("d-none")
+        alert.classList.add("alert-danger")
+        alert.textContent = "Error al actualizar"
+    } else {//Si se ha producido la actualización correctamente
+        alert.classList.remove("d-none")
+        alert.classList.add("alert-light")
+        alert.textContent = "Registro actualizado correctamente"
 
+    }
 
 }
 
