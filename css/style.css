@@ -31,7 +31,7 @@ body {
     width: 100%;
     min-width: 375px;
     max-width: 1600px;
-    background-color: rgb(107, 107, 107);
+    background-color: rgb(237,234,229);
 }
 
 a {
@@ -41,4 +41,68 @@ a {
 
 ul {
     list-style: none;
+}
+
+.barra_org {
+    background-color: #4ca0cc;
+    border-bottom-left-radius: 0.55rem;
+    border-bottom-right-radius: 0.55rem;
+    display: flex;
+    justify-content: center;    
+}
+
+.caja_org {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 15px;
+    
+}
+
+.caja_fech {
+    /* width: 100%; */
+    /* height: 58px; */
+    border-radius: 0.55rem;
+    border: none;
+    padding: 10px;
+    -webkit-box-shadow: 0px 13px 24px -7px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 13px 24px -7px rgba(0,0,0,0.75);
+    box-shadow: 0px 13px 24px -7px rgba(0,0,0,0.75);
+}
+
+.caja_inp {
+    -webkit-box-shadow: 0px 13px 24px -7px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 13px 24px -7px rgba(0,0,0,0.75);
+    box-shadow: 0px 13px 24px -7px rgba(0,0,0,0.75);
+border-radius: 0.55rem;
+}
+
+.container__table{
+    height: 400px;
+    width: 650px;
+   border-radius: 0.50rem  ;
+   border: 1px solid #4ca0cc;
+   background-color: rgba(231, 236, 240, 0.203);
+   font-variant:small-caps ;
+   overflow-y: scroll;
+   scrollbar-width: thin;
+   text-align: center;
+}
+.table{
+    background-color: white;
+    border: 1px solid #4ca0cc;
+    color: #4ca0cc;
+    margin-top: 30px;
+}
+.cassette {
+    width: 400px;
+    border-radius: 0.50rem;
+    border: 1px solid #4ca0cc;
+    background-color: rgba(231, 236, 240, 0.203);
+    font-variant: small-caps;
+}
+
+.cassette__title {
+    color: #4ca0cc;
 }
