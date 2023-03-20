@@ -1,28 +1,110 @@
-//Elementos html:
-const inputUpdateName = document.querySelector("#inputUpdateName")
-const inputUpdateApellidos = document.querySelector("#inputUpdateApellidos")
-const inputUpdateEmail = document.querySelector("#inputUpdateEmail")
-const inputUpdateCentro = document.querySelector("#inputUpdateCentro")
-const inputUpdateCurso = document.querySelector("#inputUpdateCurso")
-const formUpdateTecData = document.querySelector("#formUpdateTecData")
+const tbodyCassettes = document.querySelector("#tbodyCassettes")
+const cardCassette = document.querySelector("#cardCassette")
+const tbodyMuestras = document.querySelector("#tbodyMuestras")
 
-const container = document.querySelector("#container")
-
-const alertError = document.querySelector(".alert-danger")
-const alertUpdated = document.querySelector(".alert-primary")
-const alertWarning = document.querySelector(".alert-warning")
+const selectOrgano = document.querySelector("#selectOrgano")
+const inputFechaInicio = document.querySelector("#inputFechaInicio")
+const inputFechaFin = document.querySelector("#inputFechaFin")
+const btnFiltrarFechas = document.querySelector("#btnFiltrarFechas")
 
 
-//Ejemplo si el login lo ha realizado el técnico con el id 1
-const tecId = 1
-let tecData
+const user = JSON.parse(sessionStorage.getItem("user"))
+const token = sessionStorage.getItem("token")
 
-//Accedemos al token desde el sessionStorage
-//const token = sessionStorage.getItem("token")
-const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvSWQiOjEsImNyZWF0ZWRBdCI6MTY3ODg4MzgyNiwiZXhwaXJlZEF0IjoxNjc4OTA1NDI2fQ.b4a-zh4T0bEutTKrBtRv5-VI_AWtJgR6He2T1n_zHhA"
 
-//Función para hacer una petición a cualquier api. Recibe la url de la petición y el método y el body en caso de necesitarlo.
-//Por defecto el método será GET y el body null
+let cassettes = []
+
+inputFechaFin.setAttribute("MAX", new Date().toLocaleDateString('fr-ca'))
+inputFechaInicio.setAttribute("MAX", new Date().toLocaleDateString('fr-ca'))
+
+
+// Elimina los diacríticos de un texto (ES6)
+//
+function eliminarDiacriticos(texto) {
+    return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+}
+
+const nuevaCelda = (dato, colspan = 0) => {
+    let nuevacelda = document.createElement("TD");
+    nuevacelda.setAttribute("COLSPAN", colspan)
+    nuevacelda.append(dato);
+    return nuevacelda;
+};
+
+const nuevoSpan = (texto) => {
+    let nuevoSpan = document.createElement("SPAN");
+    nuevoSpan.append(texto);
+    return nuevoSpan;
+};
+
+const printQR = (imgQR, url) => {
+    new QRious({
+        element: imgQR,
+        value: url, // La URL o el texto
+        size: 150,
+        backgroundAlpha: 0, // 0 para fondo transparente
+        foreground: "black", // Color del QR
+        level: "H", // Puede ser L,M,Q y H (L es el de menor nivel, H el mayor)
+    });
+}
+
+const printCassettes = (cassettes) => {
+    tbodyCassettes.innerHTML = ""
+    let fragment = document.createDocumentFragment();
+
+    if (cassettes.length === 0) {//Si no hay muestras
+        let nuevafila = document.createElement("TR");
+        nuevafila.classList.add("text-center")
+        nuevafila.append(nuevaCelda("Actualmente no hay Cassettes para los parámetros seleccionados", 4));
+        fragment.append(nuevafila);
+    } else {
+        cassettes.map(cassette => {
+            let nuevafila = document.createElement("TR");
+            nuevafila.append(nuevaCelda(cassette.fecha.split("T")[0]));
+            nuevafila.append(nuevaCelda(cassette.caracteristicas));
+            nuevafila.append(nuevaCelda(cassette.organo));
+            nuevafila.append(nuevaCelda(cassette.id));
+            fragment.append(nuevafila);
+        })
+    }
+
+
+    tbodyCassettes.append(fragment);
+}
+
+const printCassetteData = (cassette) => {
+    cardCassette.children[1].children[0].children[1].textContent = cassette.organo
+    cardCassette.children[1].children[1].children[1].textContent = cassette.fecha.split("T")[0]
+    cardCassette.children[1].children[2].children[1].textContent = cassette.caracteristicas
+    cardCassette.children[1].children[3].children[1].textContent = cassette.observaciones
+    cardCassette.children[1].children[4].children[0].innerHTML = ""
+    let imgQR = document.createElement("IMG")
+    cardCassette.children[1].children[4].children[0].appendChild(imgQR)
+    printQR(imgQR, cassette.codigoQR.split("QRCODE~")[1])
+
+}
+
+const printMuestras = (muestras) => {
+    tbodyMuestras.innerHTML = ""
+    let fragment = document.createDocumentFragment();
+
+    if (muestras.length === 0) {//Si no hay muestras
+        let nuevafila = document.createElement("TR");
+        nuevafila.classList.add("text-center")
+        nuevafila.append(nuevaCelda("Actualmente no hay muestras para el Cassette seleccionado", 3));
+        fragment.append(nuevafila);
+    } else {
+        muestras.map(muestra => {
+            let nuevafila = document.createElement("TR");
+            nuevafila.append(nuevaCelda(muestra.fecha.split("T")[0]));
+            nuevafila.append(nuevaCelda(muestra.observaciones));
+            nuevafila.append(nuevaCelda(muestra.tincion));
+            fragment.append(nuevafila);
+        })
+    }
+    tbodyMuestras.append(fragment);
+
+}
 
 const apiRequest = async (url, token, method = "GET", body = null) => {
     return fetch(url,
@@ -39,72 +121,50 @@ const apiRequest = async (url, token, method = "GET", body = null) => {
         .catch(error => console.log(error));
 }
 
-const changeOptionSelected = (select, optionSelected) => {
-    select.map(option => {
-        if (option.value == optionSelected) {
-            option.setAttribute('SELECTED', true)
-        }
-    })
-}
-
-
-
-//Guardo los datos del técnico
-const loadTecData = async () => {
-    if (token) {//Si existe el token
-        tecData = await apiRequest(`http://localhost:3000/sanitaria/tecnicos/info/${tecId}`, token)
-        //Muestro en los input los datos del técnicos
-
-        inputUpdateName.value = tecData.nombre
-        inputUpdateApellidos.value = tecData.apellidos
-        inputUpdateEmail.value = tecData.email
-        changeOptionSelected(Array.from(inputUpdateCentro.children), tecData.centro)
-        changeOptionSelected(Array.from(inputUpdateCurso.children), tecData.curso)
-    } else {//Si tiene token se le redirigiría al login
-
-    }
-}
-
-//Patch para actualizar los datos del técnico:
-const updateTecData = async (ev) => {
-    ev.preventDefault()
-    alertError.classList.add("d-none")
-    alertWarning.classList.add("d-none")
-    alertUpdated.classList.add("d-none")
-
-    let inputEmpty = false
-    const newTecData =
-    {
-        nombre: inputUpdateName.value.trim(),
-        apellidos: inputUpdateApellidos.value.trim(),
-        email: inputUpdateEmail.value.trim(),
-        centro: inputUpdateCentro.value.trim(),
-        curso: inputUpdateCurso.value.trim(),
-    }
-    for (let i in newTecData) {
-        if (newTecData[i] === "") {
-            inputEmpty = true
-        }
-    }
-    if (inputEmpty) {//Si hay algún campo vacio
-        alertWarning.classList.remove("d-none")
-    } else {
-        if (await apiRequest(
-            `http://localhost:3000/sanitaria/tecnicos/${tecId}`,
+const loadCassetteData = async (ev) => {
+    if (ev.target.tagName == "TD" && ev.target.parentElement.lastChild.getAttribute("colspan") == 0) {
+        let idCassette = ev.target.parentElement.lastChild.textContent;
+        let muestras = await apiRequest(
+            `http://localhost:3000/sanitaria/cassettes/muestras/${idCassette}`,
             token,
-            "PUT",
-            JSON.stringify(newTecData)
-        ).error) {//Si se ha producido algún error
-            alertError.classList.remove("d-none")
-        } else {//Si se ha producido la actualización correctamente
-            alertUpdated.classList.remove("d-none")
-        }
+        )
+        printCassetteData(muestras)
+        printMuestras(muestras.muestras)
     }
+}
 
-
+const loadData = async (ev) => {
+    if (token) {
+        if (ev.target.tagName == "SELECT") {//Filtrar por órgano
+            cassettes = await apiRequest(
+                `http://localhost:3000/sanitaria/cassettes/organo/${eliminarDiacriticos(selectOrgano.value.toUpperCase())}`,
+                token,
+            )
+        } else if (ev.target.id == "btnFiltrarFechas") {//Filtrar por fechas
+            ev.preventDefault()
+            if (inputFechaInicio !== "" && inputFechaFin !== "" && inputFechaInicio.value <= inputFechaFin.value) {//Si las fechas están completas y la de inicio es menor que la de fin se hace la petición
+                cassettes = await apiRequest(
+                    `http://localhost:3000/sanitaria/cassettes/dates/${inputFechaInicio.value}/${inputFechaFin.value}`,
+                    token,
+                )
+            }
+        } else {//Cargar los 20 más recientes
+            cassettes = await apiRequest(
+                //`http://localhost:3000/sanitaria/cassettes/tecnico/${user.id}`, //Así se cargarían los del técnico que ha hecho el login
+                `http://localhost:3000/sanitaria/cassettes/`,
+                token,
+            )
+        }
+        printCassettes(cassettes)
+    } else {//*Si no tiene token se le redirigiría al login
+        location.href = '../index.html'
+    }
 }
 
 
 
-document.addEventListener("DOMContentLoaded", loadTecData)//Cargo los datos del técnico que ha iniciado sesión
-formUpdateTecData.addEventListener("submit", (ev) => { updateTecData(ev) });
+document.addEventListener("DOMContentLoaded", (ev) => { loadData(ev) })//Cargo los datos del técnico que ha iniciado sesión
+tbodyCassettes.addEventListener("click", loadCassetteData)
+selectOrgano.addEventListener("change", (ev) => { loadData(ev) })
+btnFiltrarFechas.addEventListener("click", (ev) => { loadData(ev) })
+
