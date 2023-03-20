@@ -55,8 +55,8 @@ const changeOptionSelected = (select, optionSelected) => {
 const loadTecData = async () => {
     if (token) {//Si existe el token
         tecData = await apiRequest(`http://localhost:3000/sanitaria/tecnicos/${user.id}`, token)
+        if (tecData.error) { location.href = '../index.html' }//Si el token ha expirado le redirijo al index
         //Muestro en los input los datos del técnicos
-
         inputUpdateName.value = tecData.nombre
         inputUpdateApellidos.value = tecData.apellidos
         inputUpdateEmail.value = tecData.email

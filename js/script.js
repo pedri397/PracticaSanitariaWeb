@@ -6,13 +6,20 @@ const selectOrgano = document.querySelector("#selectOrgano")
 const inputFechaInicio = document.querySelector("#inputFechaInicio")
 const inputFechaFin = document.querySelector("#inputFechaFin")
 const btnFiltrarFechas = document.querySelector("#btnFiltrarFechas")
+const btnborrar = document.querySelector("#btnborrar")
+const btnmodificar = document.querySelector("#btnmodificar")
+
+
 
 
 const user = JSON.parse(sessionStorage.getItem("user"))
 const token = sessionStorage.getItem("token")
-
+//*Si no hay token se redirige al login
+//*TODO: esto debería controlarse con sessiones
+if (!token) { location.href = '../index.html' }
 
 let cassettes = []
+let idCassette = 0
 
 inputFechaFin.setAttribute("MAX", new Date().toLocaleDateString('fr-ca'))
 inputFechaInicio.setAttribute("MAX", new Date().toLocaleDateString('fr-ca'))
@@ -123,7 +130,7 @@ const apiRequest = async (url, token, method = "GET", body = null) => {
 
 const loadCassetteData = async (ev) => {
     if (ev.target.tagName == "TD" && ev.target.parentElement.lastChild.getAttribute("colspan") == 0) {
-        let idCassette = ev.target.parentElement.lastChild.textContent;
+        idCassette = ev.target.parentElement.lastChild.textContent;
         let muestras = await apiRequest(
             `http://localhost:3000/sanitaria/cassettes/muestras/${idCassette}`,
             token,
@@ -134,6 +141,7 @@ const loadCassetteData = async (ev) => {
 }
 
 const loadData = async (ev) => {
+    console.log(ev)
     if (token) {
         if (ev.target.tagName == "SELECT") {//Filtrar por órgano
             cassettes = await apiRequest(
@@ -148,16 +156,33 @@ const loadData = async (ev) => {
                     token,
                 )
             }
-        } else {//Cargar los 20 más recientes
+        } else if (ev.target == document) {//Cargar los 20 más recientes
             cassettes = await apiRequest(
                 //`http://localhost:3000/sanitaria/cassettes/tecnico/${user.id}`, //Así se cargarían los del técnico que ha hecho el login
                 `http://localhost:3000/sanitaria/cassettes/`,
                 token,
             )
         }
+        if (cassettes.error) { location.href = '../index.html' }//Si el token ha expirado le redirijo al index
         printCassettes(cassettes)
     } else {//*Si no tiene token se le redirigiría al login
         location.href = '../index.html'
+    }
+}
+
+const removeCassette = async (ev) => {
+    if (idCassette != 0) {//Si ha seleccionado algún cassete para borrarlo
+        if (await apiRequest(
+            //`http://localhost:3000/sanitaria/cassettes/tecnico/${user.id}`, //Así se cargarían los del técnico que ha hecho el login
+            `http://localhost:3000/sanitaria/cassettes/${idCassette}`,
+            token,
+            "DELETE"
+        ).error) {//Si se ha producido algún error
+            console.log("error")
+        } else {//Si el borrado se ha producido correctamente
+            console.log("borrado")
+            window.location.reload()//Actualizo la página
+        }
     }
 }
 
@@ -167,4 +192,6 @@ document.addEventListener("DOMContentLoaded", (ev) => { loadData(ev) })//Cargo l
 tbodyCassettes.addEventListener("click", loadCassetteData)
 selectOrgano.addEventListener("change", (ev) => { loadData(ev) })
 btnFiltrarFechas.addEventListener("click", (ev) => { loadData(ev) })
+btnborrar.addEventListener("click", (ev) => { removeCassette(ev) })
+
 
