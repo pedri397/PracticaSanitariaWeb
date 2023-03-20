@@ -18,6 +18,7 @@ const token = sessionStorage.getItem("token")
 //*TODO: esto debería controlarse con sessiones
 if (!token) { location.href = '../index.html' }
 
+
 let cassettes = []
 let idCassette = 0
 
@@ -26,7 +27,6 @@ inputFechaInicio.setAttribute("MAX", new Date().toLocaleDateString('fr-ca'))
 
 
 // Elimina los diacríticos de un texto (ES6)
-//
 function eliminarDiacriticos(texto) {
     return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
@@ -87,7 +87,7 @@ const printCassetteData = (cassette) => {
     cardCassette.children[1].children[4].children[0].innerHTML = ""
     let imgQR = document.createElement("IMG")
     cardCassette.children[1].children[4].children[0].appendChild(imgQR)
-    printQR(imgQR, cassette.codigoQR.split("QRCODE~")[1])
+    printQR(imgQR, cassette.codigoQR)
 
 }
 
@@ -193,5 +193,6 @@ tbodyCassettes.addEventListener("click", loadCassetteData)
 selectOrgano.addEventListener("change", (ev) => { loadData(ev) })
 btnFiltrarFechas.addEventListener("click", (ev) => { loadData(ev) })
 btnborrar.addEventListener("click", (ev) => { removeCassette(ev) })
+//*TODO: listener de lector de códigos o keypress de "QRCODE~", que es el principio del codigo qr de la bd
 
-
+//*TODO: añadir imgs blob a la bd y modal para mostrarlas
